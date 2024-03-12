@@ -55,19 +55,23 @@ function Get-UserDeviceToken {
         "Uri" = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
         "Body" = $body 
     }
+
+    $count = 0
     do {
         $failed = $false        
         try {
             $Tokens = Invoke-RestMethod -UseBasicParsing @params
         } catch {
-            $pending = $_.Exception.Message
-            Write-Host $pending -ForegroundColor Red
-            #if ($pending -eq "authorization_pending") {
-            #    $failed = $true
-            #}
+            if ($count -lt 1) {
+                 
+                Write-Host "Error: $_" -ForegroundColor Red
+                Write-Host "`nWaiting on target to bite..."
+            }
             $failed = $true
+            $count++
         }
-    } while ($failed)
+    } while ($failed) 
 
+    Write-Host "We got a bite!`n" -ForegroundColor Green
     Write-Host $Tokens -ForegroundColor Green
 }
