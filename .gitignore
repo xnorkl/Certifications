@@ -1,3 +1,9 @@
+# dont push vpn or creds
 vpn/
+creds/ 
 
-.DS_Store
+# dont push hidden files
+.*
+
+# except .gitignore
+!.gitignore
